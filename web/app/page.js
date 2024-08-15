@@ -5,27 +5,57 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
 
-  const [articles, setArticles] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-  console.log("articles", articles)
+  // console.log("categories", categories)
 
-  useEffect(() => {
-    fetch("http://localhost:4000/articles")
+  function loadList() {
+    fetch("http://localhost:5002/categories/list")
       .then((res) => res.json())
       .then((data) => {
-        setArticles(data);
+        setCategories(data);
       });
+  }
+  useEffect(() => {
+    loadList();
   }, []);
 
+  function createNew() {
+    const name = prompt("Name...");
+    fetch(`http://localhost:5002/categories/create?name=${name}`)
+      .then((res) => res.json())
+      .then(() => {
+        loadList();
+      });
+  }
+
+  function deleteTask(position) {
+    if (confirm("Are you sure?")) {
+      categories.splice(position, 1);
+    
+    }
+  }
+  function editTask(position) {
+    const oldvalue = categories[position].name;
+    const newvalue = prompt("Edit Task", oldvalue);
+    if (newvalue !== null) {
+      categories[position].name = newvalue;
+    }
+   
+  }
 
   return (
     <main>
-      {articles.map((article) => (
-        <div key={article.id}>
-          <p>{article.title}
+      <button onClick={createNew}> Add new </button>
+      {categories.map((category) => (
+        <div key={category.name}>
+          <p>{category.name}
           </p>
+          <button onClick={editTask}>edit</button>
+          <button onClick={deleteTask}>delete</button>
         </div>
       ))}
+   
     </main>
   );
 }
