@@ -10,7 +10,7 @@ export default function Home() {
   // console.log("categories", categories)
 
   function loadList() {
-    fetch("http://localhost:5002/categories/list")
+    fetch("http://localhost:5000/categories/list")
       .then((res) => res.json())
       .then((data) => {
         setCategories(data);
@@ -22,7 +22,16 @@ export default function Home() {
 
   function createNew() {
     const name = prompt("Name...");
-    fetch(`http://localhost:5002/categories/create?name=${name}`)
+    fetch(`http://localhost:5000/categories/create?name=${name}`, {
+      method: "POST", 
+      body: JSON.stringify({
+        name: name, 
+        body_html: `hjkfghh<sgsg>fgskfgkshgnkshfgks` }),
+      headers: {
+         "Content-type": "application/json; charset=UTF-8", 
+         // https://www.geeksforgeeks.org/get-and-post-method-using-fetch-api/
+      },
+    })
       .then((res) => res.json())
       .then(() => {
         loadList();
