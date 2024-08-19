@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Chart } from "@/components/ui/chart";
+import { Button, button } from "@/components/ui/button";
 
 export default function Home() {
 
@@ -10,7 +13,7 @@ export default function Home() {
   // console.log("categories", categories)
 
   function loadList() {
-    fetch("http://localhost:5000/categories/list")
+    fetch("http://localhost:5000/categories")
       .then((res) => res.json())
       .then((data) => {
         setCategories(data);
@@ -19,10 +22,19 @@ export default function Home() {
   useEffect(() => {
     loadList();
   }, []);
-
+  function handleDelete(id) {
+    fetch(`http://localhost:5000/categories/${id}`, {
+      method:"DELETE",
+    }).then((res) => {
+     if (res.status === 404 ) {
+      alert ("Category not found");
+     }
+     loadList();
+    });
+  }
   function createNew() {
     const name = prompt("Name...");
-    fetch(`http://localhost:5000/categories/create?name=${name}`, {
+    fetch(`http://localhost:5000/categories`, {
       method: "POST", 
       body: JSON.stringify({
         name: name, 
@@ -38,33 +50,22 @@ export default function Home() {
       });
   }
 
-  function deleteTask(position) {
-    if (confirm("Are you sure?")) {
-      categories.splice(position, 1);
-    
-    }
-  }
-  function editTask(position) {
-    const oldvalue = categories[position].name;
-    const newvalue = prompt("Edit Task", oldvalue);
-    if (newvalue !== null) {
-      categories[position].name = newvalue;
-    }
-   
-  }
 
   return (
     <main>
-      <button onClick={createNew}> Add new </button>
+      
+      <Button onClick={createNew}> add new</Button>
       {categories.map((category) => (
         <div key={category.name}>
           <p>{category.name}
           </p>
-          <button onClick={editTask}>edit</button>
-          <button onClick={deleteTask}>delete</button>
+          {/* <Button onClick={editTask}>edit</Button> */}
+          <Button onClick={handleDelete}>delete</Button>
+        
         </div>
       ))}
-   
+     
+      
     </main>
   );
 }

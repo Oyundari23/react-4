@@ -31,12 +31,12 @@ app.get("/categories/:id", (req, res) => {
 // create
 app.post("/categories", (req, res) => {
     const { name } = req.body;
+    const id = new Date().toISOString();
     categories.push ({ 
-        id: new Date().toISOString(),
-        name: name , 
+        id, name: name 
     }); 
     fs.writeFileSync("categories.json", JSON.stringify(categories));
-    res.json(["success"]);
+    res.status(201).json({ id });
 });
 
 //update 
@@ -54,7 +54,7 @@ app.delete("/categories/:id", (req, res) => {
     const { id } = req.params;
    categories = categories.filter((cat) => cat.id !== id);
    fs.writeFileSync("categories.json", JSON.stringify(categories));
-   res.json(["Success"]);
+   res.sendStatus(204);
 });
 
 app.get('/', (req, res) => {
