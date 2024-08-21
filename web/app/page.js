@@ -22,23 +22,25 @@ export default function Home() {
   useEffect(() => {
     loadList();
   }, []);
+
   function handleDelete(id) {
     fetch(`http://localhost:5000/categories/${id}`, {
       method:"DELETE",
-    }).then((res) => {
-     if (res.status === 404 ) {
-      alert ("Category not found");
-     }
-     loadList();
+    }).then((res) => { 
+      if (res.status === 404) {
+        alert ("Category not found");
+      }
+      loadList();
     });
   }
+   
   function createNew() {
     const name = prompt("Name...");
     fetch(`http://localhost:5000/categories`, {
       method: "POST", 
       body: JSON.stringify({
         name: name, 
-        body_html: `hjkfghh<sgsg>fgskfgkshgnkshfgks` }),
+        }),
       headers: {
          "Content-type": "application/json; charset=UTF-8", 
          // https://www.geeksforgeeks.org/get-and-post-method-using-fetch-api/
@@ -50,22 +52,21 @@ export default function Home() {
       });
   }
 
-
   return (
-    <main>
-      
+    <main>     
       <Button onClick={createNew}> add new</Button>
       {categories.map((category) => (
         <div key={category.name}>
           <p>{category.name}
           </p>
           {/* <Button onClick={editTask}>edit</Button> */}
-          <Button onClick={handleDelete}>delete</Button>
-        
+          <Button onClick={ () => handleDelete (category.id)}>delete</Button>       
         </div>
       ))}
-     
-      
+      <div>
+        wrong data 
+        <button onClick={( ) => handleDelete("wrong ID")}>Delete</button>
+      </div>   
     </main>
   );
 }
