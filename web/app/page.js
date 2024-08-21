@@ -13,7 +13,7 @@ export default function Home() {
   // console.log("categories", categories)
 
   function loadList() {
-    fetch("http://localhost:5000/categories")
+    fetch("http://localhost:4000/categories")
       .then((res) => res.json())
       .then((data) => {
         setCategories(data);
@@ -24,8 +24,18 @@ export default function Home() {
   }, []);
 
   function handleDelete(id) {
-    fetch(`http://localhost:5000/categories/${id}`, {
+    fetch(`http://localhost:4000/categories/${id}`, {
       method:"DELETE",
+    }).then((res) => { 
+      if (res.status === 404) {
+        alert ("Category not found");
+      }
+      loadList();
+    });
+  }
+  function handleEdit(id) {
+    fetch(`http://localhost:4000/categories/${id}`, {
+      method:"",
     }).then((res) => { 
       if (res.status === 404) {
         alert ("Category not found");
@@ -36,7 +46,7 @@ export default function Home() {
    
   function createNew() {
     const name = prompt("Name...");
-    fetch(`http://localhost:5000/categories`, {
+    fetch(`http://localhost:4000/categories`, {
       method: "POST", 
       body: JSON.stringify({
         name: name, 
@@ -60,7 +70,8 @@ export default function Home() {
           <p>{category.name}
           </p>
           {/* <Button onClick={editTask}>edit</Button> */}
-          <Button onClick={ () => handleDelete (category.id)}>delete</Button>       
+          <Button onClick={ () => handleDelete (category.id)}>Delete</Button>
+          <Button onClick={ () => handleEdit  (category.id)}> Edit</Button>       
         </div>
       ))}
       <div>

@@ -1,4 +1,4 @@
-const port = 5000;
+const port = 4000;
 const express = require('express');  // backend import hiihde rqeuire ashiglana 
 const cors = require('cors');
 const app = express();
@@ -15,6 +15,8 @@ function startApp() {
     return app;
 }
 
+startApp();
+
 module.exports = {
-    startApp, 
+    app,
 }
