@@ -1,6 +1,6 @@
 const { app } = require("./configs/basic");
 const { sql } = require("./configs/database");
-const { getCategories, createNewCategory  } = require("./services/categoryService"); 
+const { getCategories, createNewCategory, getOneCategories, deleteOneCategory, updateOneCategory } = require("./services/categoryService"); 
 
 
 // read  olon too no id needed
@@ -9,12 +9,38 @@ app.get("/categories", async (req, res) => {
     res.json(list);
 });   
 
+// get a category 
+app.get("/categories/:id", async (req, res) => {
+    const { id } = req.params;
+    const one  = await getOneCategories(id);
+    if ( !one) {
+        res.status(404).json({message: "Not found"});
+        return;
+    };
+    res.json(one);
+});
+
+// delete a category
+app.delete("/categories/:id", async (req, res) => {
+    const { id } = req.params;
+    await deleteOneCategory(id);
+    res.sendStatus(204);
+});
+
 // create
 app.post("/categories", async (req, res) => {
     const input = req.body;
     const id = await createNewCategory ( input );
     res.status(201).json({ id });
     }); 
+    
+// update
+    app.put("/categories/:id", async (req, res) => {
+        const { id }=  req.params;
+        const input = req.body;
+        await updateOneCategory ( id, input );
+        res.sendStatus(204);
+        }); 
 
     app.get("/dbtest", async (req, res) => {
         const result = await sql`select version()`;
