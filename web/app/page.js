@@ -41,6 +41,13 @@ import {
 import { Input } from "@/components/ui/input"
 
 
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+
+const tags = Array.from({ length: 50 }).map(
+  (_, i, a) => `v1.2.0-beta.${a.length - i}`
+)
+
 const categoryIcons = [
   {
     name: 'home',
@@ -191,67 +198,85 @@ export default function Home() {
         </div>
       ))}
 
-      <div className="w-[1440px] bg-white flex gap-10 justify-between ">
+      <div className="px-[120px] bg-white flex gap-10 justify-between bg-slate-50 h-[72px] items-center ">
         <div className="w-[225px] flex gap-6">
-          <p>icon </p>
-          <p>Dashboard</p>
-          <p>Records</p>
+          <div><Image src="/images/Vector.png" width={100} height={100} alt="logo" /></div>
+          <div>Dashboard</div>
+          <div>Records</div>
         </div>
         <div className="w-[163px] h-[40px] flex gap-6  p-1 ">
-          <div className="w-[99px] h-[32px] rounded-2xl bg-[#0166FF] text-center py-1 text-white text-sm">+ Record</div>
-          <div> zurag</div>
+          <Button className="w-[99px] rounded-2xl bg-[#0166FF] h-[32px]">+ Record</Button>
+          <div> <Image src="/images/Placeholder.png" width={50} height={50} alt="profile" /></div>
         </div>
       </div>
 
       {/* card */}
 
       <div className="flex justify-between mt-8 px-[120px]">
-        <Card className="w-[384.12px] h-[219.66px]">
-          <CardHeader>
-            <CardTitle>Your income </CardTitle>
-            <CardDescription>
-              <p>10,000,000 MNT</p>
-              <p>Your income amount</p> </CardDescription>
-          </CardHeader>
-          <CardContent>
-
-          </CardContent>
-          <CardFooter className="flex gap-2">
-          <CircleArrowUp className=""/>
-          <p>32% from last month</p>
-          </CardFooter>
+      <Card className="w-[384.12px] h-[219.66px]">
+          <CardHeader className="flex flex-col gap-2">
+            <div className="flex items-center gap-4">
+              <div className="h-2 w-2 bg-[#0166FF] rounded-full"></div>
+              <div className="font-bold text-base ">Total expenses</div>
+            </div>
+            <Separator className="" />
+            <div className="flex flex-col gap-2">
+              <div className="text-4xl font-bold mt-3">1,200,000₮</div>
+              <div className="text-lg text-[#64748B]">Your income amount</div>
+            </div>
+            <div className="flex gap-4">  <CircleArrowUp className="bg-green"/>
+              32% from last month</div>
+          </CardHeader>        
         </Card>
         <Card className="w-[384.12px] h-[219.66px]">
-          <CardHeader>
-            <CardTitle>Your income </CardTitle>
-            <CardDescription>
-              <p>10,000,000 MNT</p>
-              <p>Your income amount</p> </CardDescription>
-          </CardHeader>
-          <CardContent>
-
-          </CardContent>
-          <CardFooter className="flex gap-2">
-          <CircleArrowUp />
-          <p>32% from last month</p>
-          </CardFooter>
+          <CardHeader className="flex flex-col gap-2">
+            <div className="flex items-center gap-4">
+              <div className="h-2 w-2 bg-[#84CC16] rounded-full"></div>
+              <div className="font-bold text-base ">Your income </div>
+            </div>
+            <Separator className="" />
+            <div className="flex flex-col gap-2">
+              <div className="text-4xl font-bold mt-3">1,200,000₮</div>
+              <div className="text-lg text-[#64748B]">Your income amount</div>
+            </div>
+            <div className="flex gap-4">  <CircleArrowUp className="bg-green"/>
+              32% from last month</div>
+          </CardHeader>        
         </Card>
         <Card className="w-[384.12px] h-[219.66px]">
-          <CardHeader>
-            <CardTitle>Total expenses</CardTitle>
-            <CardDescription>
-              <p>10,000,000 MNT</p>
-              <p>Your income amount</p> </CardDescription>
-          </CardHeader>
-          <CardContent>
-          </CardContent>
-          <CardFooter className="flex gap-2">
-          <CircleArrowUp />
-          <p>32% from last month</p>
-          </CardFooter>
+          <CardHeader className="flex flex-col gap-2">
+            <div className="flex items-center gap-4">
+              <div className="h-2 w-2 bg-[#0166FF] rounded-full"></div>
+              <div className="font-bold text-base ">Total expenses</div>
+            </div>
+            <Separator className="" />
+            <div className="flex flex-col gap-2">
+              <div className="text-4xl font-bold mt-3">-1,200,000₮</div>
+              <div className="text-lg text-[#64748B]">Your total expense amount</div>
+            </div>
+            <div className="flex gap-4">  <CircleArrowUp className="bg-green"/>
+              32% from last month</div>
+          </CardHeader>        
         </Card>
-
       </div>
+
+      {/* SCROLL AREA  */}
+      <div className="px-[120px] mt-8">
+        <ScrollArea className="h-72 w-full rounded-md border">
+          <div className="p-4">
+            <h3 className="mb-4">Last records</h3>
+            {tags.map((tag) => (
+              <>
+                <div key={tag} className="text-sm">
+                  {tag}
+                </div>
+                <Separator className="my-2" />
+              </>
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
+
 
       <div>
         <div>
