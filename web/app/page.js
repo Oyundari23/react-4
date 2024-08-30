@@ -48,6 +48,25 @@ const tags = Array.from({ length: 50 }).map(
   (_, i, a) => `v1.2.0-beta.${a.length - i}`
 )
 
+// import { TrendingUp } from "lucide-react"
+// import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+
+// import {
+//   ChartContainer,
+//   ChartTooltip,
+//   ChartTooltipContent,
+// } from "@/components/ui/chart"
+// const chartData = [
+//   { month: "January", desktop: 186, mobile: 80 },
+//   { month: "February", desktop: 305, mobile: 200 },
+//   { month: "March", desktop: 237, mobile: 120 },
+//   { month: "April", desktop: 73, mobile: 190 },
+//   { month: "May", desktop: 209, mobile: 130 },
+//   { month: "June", desktop: 214, mobile: 140 },
+// ]
+
+
+
 const categoryIcons = [
   {
     name: 'home',
@@ -129,12 +148,14 @@ const categoryColors = [
     Value: "#FF0101",
   },
 ]
+
 export default function Home() {
 
   const [mainpages, setMainpages] = useState([]);
   const [open, setOpen] = useState(false);
   const [icon, setIcon] = useState("");
   const [color, setColor] = useState("");
+  const [name, setName] = useState("");
 
   function loadList() {
     fetch("http://localhost:4000/mainpages")
@@ -187,8 +208,10 @@ export default function Home() {
       });
   }
 
+
+  console.log({color, icon, name} );
   return (
-    <main className="mx-auto w-[1440px]"  >
+    <main className="mx-auto w-[1440px]" >
       {mainpages.map((mainpage) => (
         <div key={mainpage.title}>
           <p>{mainpage.title}
@@ -213,7 +236,7 @@ export default function Home() {
       {/* card */}
 
       <div className="flex justify-between mt-8 px-[120px]">
-      <Card className="w-[384.12px] h-[219.66px]">
+        <Card className="w-[384.12px] h-[219.66px]">
           <CardHeader className="flex flex-col gap-2">
             <div className="flex items-center gap-4">
               <div className="h-2 w-2 bg-[#0166FF] rounded-full"></div>
@@ -224,9 +247,9 @@ export default function Home() {
               <div className="text-4xl font-bold mt-3">1,200,000₮</div>
               <div className="text-lg text-[#64748B]">Your income amount</div>
             </div>
-            <div className="flex gap-4">  <CircleArrowUp className="bg-green"/>
+            <div className="flex gap-4">  <CircleArrowUp className="bg-green" />
               32% from last month</div>
-          </CardHeader>        
+          </CardHeader>
         </Card>
         <Card className="w-[384.12px] h-[219.66px]">
           <CardHeader className="flex flex-col gap-2">
@@ -239,9 +262,9 @@ export default function Home() {
               <div className="text-4xl font-bold mt-3">1,200,000₮</div>
               <div className="text-lg text-[#64748B]">Your income amount</div>
             </div>
-            <div className="flex gap-4">  <CircleArrowUp className="bg-green"/>
+            <div className="flex gap-4">  <CircleArrowUp className="bg-green" />
               32% from last month</div>
-          </CardHeader>        
+          </CardHeader>
         </Card>
         <Card className="w-[384.12px] h-[219.66px]">
           <CardHeader className="flex flex-col gap-2">
@@ -254,11 +277,47 @@ export default function Home() {
               <div className="text-4xl font-bold mt-3">-1,200,000₮</div>
               <div className="text-lg text-[#64748B]">Your total expense amount</div>
             </div>
-            <div className="flex gap-4">  <CircleArrowUp className="bg-green"/>
+            <div className="flex gap-4">  <CircleArrowUp className="bg-green" />
               32% from last month</div>
-          </CardHeader>        
+          </CardHeader>
         </Card>
       </div>
+
+      {/* graph */}
+      {/* <Card>
+        <CardHeader>
+          <CardTitle>Bar Chart - Multiple</CardTitle>
+          <CardDescription>January - June 2024</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer >
+            <BarChart accessibilityLayer data={chartData}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="month"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="dashed" />}
+              />
+              <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+              <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+        <CardFooter className="flex-col items-start gap-2 text-sm">
+          <div className="flex gap-2 font-medium leading-none">
+            Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          </div>
+          <div className="leading-none text-muted-foreground">
+            Showing total visitors for the last 6 months
+          </div>
+        </CardFooter>
+      </Card> */}
 
       {/* SCROLL AREA  */}
       <div className="px-[120px] mt-8">
@@ -292,9 +351,9 @@ export default function Home() {
                     <Button variant="secondary"><House /></Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80">
-                    <div className="grid grid-cols-6 gap-5">
+                    <div className="grid grid-cols-6 gap-3">
                       {categoryIcons.map(({ name, Icon }) => (
-                        <div key={name}>
+                        <div key={name} onClick={()=> setIcon(name)} className={`flex justify-center items-center px-1 py-1 ${icon === name ? "bg-slate-200 rounded-lg " : ""}`}>
                           <Icon />
                         </div>
                       ))}
@@ -309,8 +368,7 @@ export default function Home() {
                   </PopoverContent>
                 </Popover>
                 <Input
-                  id="username"
-                  defaultValue="Name"
+                  value={name} onChange={(e)=> setName(e.target.value)}
                   className="col-span-6"
                 />
               </div>
