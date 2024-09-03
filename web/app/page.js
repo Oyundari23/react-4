@@ -48,6 +48,10 @@ const tags = Array.from({ length: 50 }).map(
   (_, i, a) => `v1.2.0-beta.${a.length - i}`
 )
 
+
+import { Toaster, Toast } from "@/components/ui/sonner"
+import { toast } from "sonner"
+
 // import { TrendingUp } from "lucide-react"
 // import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
@@ -153,24 +157,38 @@ export default function Home() {
 
   const [mainpages, setMainpages] = useState([]);
   const [open, setOpen] = useState(false);
-  const [icon, setIcon] = useState("");
-  const [color, setColor] = useState("");
+  const [icon, setIcon] = useState("home");
+  const [color, setColor] = useState("blue");
   const [name, setName] = useState("");
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [editingCategory, setEditingCategory] = useState();
 
   function loadList() {
-    fetch("http://localhost:4000/mainpages")
+    fetch("http://localhost:4000/categories")
       .then((res) => res.json())
       .then((data) => {
         setMainpages(data);
       });
   }
+
+  function reset () {
+    setName("");
+    setColor("blue");
+    setIcon("home");
+    setEditingCategory(null);
+  }
+  function closeDialog (){
+    reset();
+    setOpen(false);
+  }
+
   useEffect(() => {
     loadList();
   }, []);
 
   function handleDelete(id) {
-    fetch(`http://localhost:4000/mainpages/${id}`, {
+    fetch(`http://localhost:4000/categories/${id}`, {
       method: "DELETE",
     }).then((res) => {
       if (res.status === 404) {
@@ -180,7 +198,7 @@ export default function Home() {
     });
   }
   function handleEdit(id) {
-    fetch(`http://localhost:4000/mainpages/${id}`, {
+    fetch(`http://localhost:4000/categories/${id}`, {
       method: "",
     }).then((res) => {
       if (res.status === 404) {
@@ -191,12 +209,13 @@ export default function Home() {
   }
 
   function createNew() {
-    const name = prompt("Name...");
-    fetch(`http://localhost:4000/mainpages`, {
+    setLoading(true);
+    fetch(`http://localhost:4000/categories`, {
       method: "POST",
       body: JSON.stringify({
         name: name,
         color: color,
+        icon: icon,
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -206,16 +225,52 @@ export default function Home() {
       .then((res) => res.json())
       .then(() => {
         loadList();
+        setLoading(false);
+        closeDialog ();
+     
+        toast("Successfully created. ");
+      });
+  }
+  console.log ({editingCategory});
+  useEffect(()=> {
+    if(editingCategory) {
+      setOpen(true);
+      setName(editingCategory.name);
+      setIcon(editingCategory.icon);
+      setColor (editingCategory.color);
+    }
+    
+  }, [editingCategory]);  // dotorh ym ni uurchlugdu ued ajillana 
+
+
+  function updateCategory() {
+    setLoading(true);
+    fetch(`http://localhost:4000/categories/${editingCategory.id}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        name: name,
+        color: color,
+        icon: icon,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+        // https://www.geeksforgeeks.org/get-and-post-method-using-fetch-api/
+      },
+    })
+      .then(() => {
+        loadList();
+        setLoading(false);
+        closeDialog ();  
+        toast("Successfully updated. ");
       });
   }
 
-
-  console.log({color, icon, name} );
+  console.log({ color, icon, name });
   return (
     <main className="mx-auto w-[1440px]" >
       {mainpages.map((mainpage) => (
-        <div key={mainpage.title}>
-          <p>{mainpage.title}
+        <div key={mainpage.id}>
+          <p>{mainpage.name}
           </p>
           <p>{mainpage.id}
           </p>
@@ -340,21 +395,23 @@ export default function Home() {
 
       <div>
         <div>
-          <Button variant="secondary" onClick={() => setOpen(true)}>Add new category</Button>
+          <Button variant="secondary" onClick={() => setOpen(true)} >Add new category</Button>
           <Dialog open={open}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent onClose={closeDialog} className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Add category</DialogTitle>
               </DialogHeader>
               <div className="flex gap-3">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="secondary"><House /></Button>
+                    <Button variant="secondary">
+                      <CategoryIcon iconName={icon} color={color}/>
+                      </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80">
                     <div className="grid grid-cols-6 gap-3">
                       {categoryIcons.map(({ name, Icon }) => (
-                        <div key={name} onClick={()=> setIcon(name)} className={`flex justify-center items-center px-1 py-1 ${icon === name ? "bg-slate-200 rounded-lg " : ""}`}>
+                        <div key={name} onClick={() => setIcon(name)} className={`flex justify-center items-center px-1 py-1 ${icon === name ? "bg-slate-200 rounded-lg " : ""}`}>
                           <Icon />
                         </div>
                       ))}
@@ -368,13 +425,13 @@ export default function Home() {
                     </div>
                   </PopoverContent>
                 </Popover>
-                <Input
-                  value={name} onChange={(e)=> setName(e.target.value)}
+                <Input disabled= {loading}
+                  value={name} onChange={(e) => setName(e.target.value)}
                   className="col-span-6"
                 />
               </div>
               <DialogFooter>
-                <Button className="w-full rounded-full bg-[#16A34A] hover:bg-green-700">Add</Button>
+                <Button disabled={loading} className="w-full rounded-full bg-[#16A34A] hover:bg-green-700" onClick= {createNew} >Add</Button>
                 {/* <Button onClick= {() => setOpen(false)}>Close</Button> */}
               </DialogFooter>
             </DialogContent>
@@ -383,31 +440,34 @@ export default function Home() {
       </div>
 
       {categories.map((category) => (
-       <div key={category.name}>
-        {categoryIcons.find((item)=> item.name === category.icon)}
-        <CategoryIcon name = {category.icon} color={category.color}/>
-        {category.color}
-        {category.name}<button>Edit</button>
-        <button onClick={() => handleDelete (category.id)}>Delete</button>
-       </div>
+        <div key={category.id} className="flex gap-2">
+          {categoryIcons.find((item) => item.name === category.icon)}
+          <CategoryIcon iconName={category.icon} color={category.color} />
+          {category.name}<Button>Edit</Button>
+          <Button onClick={() => handleDelete(category.id)}>Delete</Button>
+        </div>
       ))}
+      <Toaster />
     </main>
   );
 }
 
 
-function CategoryIcon ({name, color}) {
-  const iconObject = categoryIcons.find((item) => item.name === name);
+function CategoryIcon({ iconName, color }) {
+  const iconObject = categoryIcons.find((item) => item.name === iconName);
   const colorObject = categoryColors.find((item) => item.name === color);
-  if (!iconObject){
-    return null;
+ 
+  if (!iconObject) {
+    return <House/>;
   }
+
   let hexColor;
-  if(!colorObject) {
+  if (!colorObject) {
     hexColor = "#000";
   } else {
     hexColor = colorObject.value;
   }
-  const {Icon} = iconObject;
-  return <Icon style={{color}}/>;
+
+  const { Icon } = iconObject;
+  return <Icon style={{ color: hexColor }} />;
 }

@@ -29,8 +29,10 @@ app.delete("/categories/:id", async (req, res) => {
 
 // create
 app.post("/categories", async (req, res) => {
-    const input = req.body;
-    const id = await createNewCategory ( input );
+    const {name, color, icon } = req.body;
+
+    console.log(req.body)
+    const id = await createNewCategory ( {name, color, icon } ); 
     res.status(201).json({ id });
     }); 
     
