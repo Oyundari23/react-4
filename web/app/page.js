@@ -156,6 +156,7 @@ export default function Home() {
   const [icon, setIcon] = useState("");
   const [color, setColor] = useState("");
   const [name, setName] = useState("");
+  const [categories, setCategories] = useState([]);
 
   function loadList() {
     fetch("http://localhost:4000/mainpages")
@@ -380,6 +381,33 @@ export default function Home() {
           </Dialog>
         </div>
       </div>
+
+      {categories.map((category) => (
+       <div key={category.name}>
+        {categoryIcons.find((item)=> item.name === category.icon)}
+        <CategoryIcon name = {category.icon} color={category.color}/>
+        {category.color}
+        {category.name}<button>Edit</button>
+        <button onClick={() => handleDelete (category.id)}>Delete</button>
+       </div>
+      ))}
     </main>
-  )
+  );
+}
+
+
+function CategoryIcon ({name, color}) {
+  const iconObject = categoryIcons.find((item) => item.name === name);
+  const colorObject = categoryColors.find((item) => item.name === color);
+  if (!iconObject){
+    return null;
+  }
+  let hexColor;
+  if(!colorObject) {
+    hexColor = "#000";
+  } else {
+    hexColor = colorObject.value;
+  }
+  const {Icon} = iconObject;
+  return <Icon style={{color}}/>;
 }
