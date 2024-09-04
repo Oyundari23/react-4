@@ -1,6 +1,5 @@
 "use client";
 
-
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { House, Fingerprint, Apple, Baby, Bean, Bug, Cannabis, Car, Cherry, Citrus, Blocks, Calendar, Check, CircleArrowUp } from "lucide-react";
@@ -48,9 +47,9 @@ const tags = Array.from({ length: 50 }).map(
   (_, i, a) => `v1.2.0-beta.${a.length - i}`
 )
 
-
 import { Toaster, Toast } from "@/components/ui/sonner"
-import { toast } from "sonner"
+import { toast } from "sonner";
+import { categoryColors, categoryIcons } from "./components/data";
 
 // import { TrendingUp } from "lucide-react"
 // import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
@@ -69,89 +68,6 @@ import { toast } from "sonner"
 //   { month: "June", desktop: 214, mobile: 140 },
 // ]
 
-
-
-const categoryIcons = [
-  {
-    name: 'home',
-    Icon: House,
-  },
-  {
-    name: 'fingerprint',
-    Icon: Fingerprint,
-  },
-  {
-    name: 'blocks',
-    Icon: Blocks,
-  },
-  {
-    name: 'apple',
-    Icon: Apple,
-  },
-  {
-    name: 'baby',
-    Icon: Baby,
-  },
-  {
-    name: 'bean',
-    Icon: Bean,
-  },
-  {
-    name: 'bug',
-    Icon: Bug,
-  },
-  {
-    name: 'Cannabis',
-    Icon: Cannabis,
-  },
-  {
-    name: 'car',
-    Icon: Car,
-  },
-  {
-    name: 'cherry',
-    Icon: Cherry,
-  },
-  {
-    name: 'citrus',
-    Icon: Citrus,
-  },
-  {
-    name: 'calendar',
-    Icon: Calendar,
-  },
-]
-
-const categoryColors = [
-  {
-    name: 'blue',
-    Value: "#0166FF",
-  },
-  {
-    name: 'lightblue',
-    Value: "#01B3FF",
-  },
-  {
-    name: 'green',
-    Value: "#41CC00",
-  },
-  {
-    name: 'yellow',
-    Value: "#F9D100",
-  },
-  {
-    name: 'orange',
-    Value: "#FF7B01",
-  },
-  {
-    name: 'purple',
-    Value: "#AE01FF",
-  },
-  {
-    name: 'red',
-    Value: "#FF0101",
-  },
-]
 
 export default function Home() {
 
