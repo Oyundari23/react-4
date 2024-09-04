@@ -43,13 +43,16 @@ import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 
-const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-)
+// const tags = Array.from({ length: 50 }).map(
+//   (_, i, a) => `v1.2.0-beta.${a.length - i}`
+// )
 
 import { Toaster, Toast } from "@/components/ui/sonner"
 import { toast } from "sonner";
 import { categoryColors, categoryIcons } from "./components/data";
+import { Header } from "@/components/ui/comps/Header";
+import { Sidebar } from "@/components/ui/comps/Sidebar";
+import { RecordDialog } from "@/components/ui/comps/RecordDialog";
 
 // import { TrendingUp } from "lucide-react"
 // import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
@@ -71,7 +74,6 @@ import { categoryColors, categoryIcons } from "./components/data";
 
 export default function Home() {
 
-  const [mainpages, setMainpages] = useState([]);
   const [open, setOpen] = useState(false);
   const [icon, setIcon] = useState("home");
   const [color, setColor] = useState("blue");
@@ -80,21 +82,23 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [editingCategory, setEditingCategory] = useState();
 
+  console.log("categories: ", categories);
+
   function loadList() {
     fetch("http://localhost:4000/categories")
       .then((res) => res.json())
       .then((data) => {
-        setMainpages(data);
+        setCategories(data);
       });
   }
 
-  function reset () {
+  function reset() {
     setName("");
-    setColor("blue");
-    setIcon("home");
+    setColor("");
+    setIcon("");
     setEditingCategory(null);
   }
-  function closeDialog (){
+  function closeDialog() {
     reset();
     setOpen(false);
   }
@@ -129,9 +133,9 @@ export default function Home() {
     fetch(`http://localhost:4000/categories`, {
       method: "POST",
       body: JSON.stringify({
-        name: name,
-        color: color,
         icon: icon,
+        color: color,
+        name: name,
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -142,20 +146,20 @@ export default function Home() {
       .then(() => {
         loadList();
         setLoading(false);
-        closeDialog ();
-     
+        closeDialog();
+
         toast("Successfully created. ");
       });
   }
-  console.log ({editingCategory});
-  useEffect(()=> {
-    if(editingCategory) {
+  // console.log({ editingCategory });
+  useEffect(() => {
+    if (editingCategory) {
       setOpen(true);
       setName(editingCategory.name);
       setIcon(editingCategory.icon);
-      setColor (editingCategory.color);
+      setColor(editingCategory.color);
     }
-    
+
   }, [editingCategory]);  // dotorh ym ni uurchlugdu ued ajillana 
 
 
@@ -176,7 +180,7 @@ export default function Home() {
       .then(() => {
         loadList();
         setLoading(false);
-        closeDialog ();  
+        closeDialog();
         toast("Successfully updated. ");
       });
   }
@@ -184,26 +188,9 @@ export default function Home() {
   console.log({ color, icon, name });
   return (
     <main className="mx-auto w-[1440px]" >
-      {mainpages.map((mainpage) => (
-        <div key={mainpage.id}>
-          <p>{mainpage.name}
-          </p>
-          <p>{mainpage.id}
-          </p>
-        </div>
-      ))}
-
-      <div className="px-[120px] bg-white flex gap-10 justify-between bg-slate-50 h-[72px] items-center ">
-        <div className="w-[225px] flex gap-6">
-          <div><Image src="/images/Vector.png" width={100} height={100} alt="logo" /></div>
-          <div>Dashboard</div>
-          <div>Records</div>
-        </div>
-        <div className="w-[163px] h-[40px] flex gap-6  p-1 ">
-          <Button className="w-[99px] rounded-2xl bg-[#0166FF] h-[32px]">+ Record</Button>
-          <div> <Image src="/images/Placeholder.png" width={50} height={50} alt="profile" /></div>
-        </div>
-      </div>
+     <Header/>
+     <Sidebar/>
+     <RecordDialog/>
 
       {/* card */}
 
@@ -255,55 +242,18 @@ export default function Home() {
         </Card>
       </div>
 
-      {/* graph */}
-      {/* <Card>
-        <CardHeader>
-          <CardTitle>Bar Chart - Multiple</CardTitle>
-          <CardDescription>January - June 2024</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ChartContainer >
-            <BarChart accessibilityLayer data={chartData}>
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
-              />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dashed" />}
-              />
-              <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-              <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-            </BarChart>
-          </ChartContainer>
-        </CardContent>
-        <CardFooter className="flex-col items-start gap-2 text-sm">
-          <div className="flex gap-2 font-medium leading-none">
-            Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-          </div>
-          <div className="leading-none text-muted-foreground">
-            Showing total visitors for the last 6 months
-          </div>
-        </CardFooter>
-      </Card> */}
-
       {/* SCROLL AREA  */}
       <div className="px-[120px] mt-8">
         <ScrollArea className="h-72 w-full rounded-md border">
           <div className="p-4">
             <h3 className="mb-4">Last records</h3>
-            {tags.map((tag) => (
-              <>
-                <div key={tag} className="text-sm">
-                  {tag}
-                </div>
-                <Separator className="my-2" />
-              </>
-            ))}
+
+            {categories.map(category =>
+              <div key={category.id}>
+                {category.name}
+              </div>
+            )}
+
           </div>
         </ScrollArea>
       </div>
@@ -321,13 +271,13 @@ export default function Home() {
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="secondary">
-                      <CategoryIcon iconName={icon} color={color}/>
-                      </Button>
+                      <CategoryIcon iconName={icon} color={color} />
+                    </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80">
                     <div className="grid grid-cols-6 gap-3">
                       {categoryIcons.map(({ name, Icon }) => (
-                        <div key={name} onClick={() => setIcon(name)} className={`flex justify-center items-center px-1 py-1 ${icon === name ? "bg-slate-200 rounded-lg " : ""}`}>
+                        <div key={Icon} onClick={() => setIcon(name)} className={`flex justify-center items-center px-1 py-1 ${icon === name ? "bg-slate-200 rounded-lg " : ""}`}>
                           <Icon />
                         </div>
                       ))}
@@ -341,14 +291,13 @@ export default function Home() {
                     </div>
                   </PopoverContent>
                 </Popover>
-                <Input disabled= {loading}
+                <Input disabled={loading}
                   value={name} onChange={(e) => setName(e.target.value)}
                   className="col-span-6"
                 />
               </div>
               <DialogFooter>
-                <Button disabled={loading} className="w-full rounded-full bg-[#16A34A] hover:bg-green-700" onClick= {createNew} >Add</Button>
-                {/* <Button onClick= {() => setOpen(false)}>Close</Button> */}
+                <Button disabled={loading} className="w-full rounded-full bg-[#16A34A] hover:bg-green-700" onClick={createNew} >Add</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -356,9 +305,8 @@ export default function Home() {
       </div>
 
       {categories.map((category) => (
-        <div key={category.id} className="flex gap-2">
-          {categoryIcons.find((item) => item.name === category.icon)}
-          <CategoryIcon iconName={category.icon} color={category.color} />
+        <div key={category.id} className="flex gap-4 mt-4">
+          <CategoryIcon iconName={category.color} color={category.icon} />
           {category.name}<Button>Edit</Button>
           <Button onClick={() => handleDelete(category.id)}>Delete</Button>
         </div>
@@ -368,20 +316,22 @@ export default function Home() {
   );
 }
 
-
 function CategoryIcon({ iconName, color }) {
-  const iconObject = categoryIcons.find((item) => item.name === iconName);
-  const colorObject = categoryColors.find((item) => item.name === color);
- 
+  const iconObject = categoryIcons.find((item) => item.name === color);
+  const colorObject = categoryColors.find((item) => item.name === iconName);
+
+  console.log("colorObject", colorObject)
+  console.log("iconObject", iconObject)
+
   if (!iconObject) {
-    return <House/>;
+    return <House />;
   }
 
   let hexColor;
   if (!colorObject) {
     hexColor = "#000";
   } else {
-    hexColor = colorObject.value;
+    hexColor = colorObject.Value;
   }
 
   const { Icon } = iconObject;

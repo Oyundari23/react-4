@@ -17,3 +17,16 @@ ALTER TABLE category (
   ADD column icon varchar(20),
   ADD column color varchar(20),
 )
+CREATE TYPE transactionType AS ENUM ('INCOME', 'EXPENSE');
+CREATE TABLE TRANSACTION (
+  id char(36) PRIMARY KEY, 
+  amount decimal (10,2),
+  categoryId char(36),
+  type transactionType,
+  date DATE, 
+  payee VARCHAR(36), 
+  note TEXT,
+  FOREIGN KEY (categoryId) REFERENCES category(id)
+)
+
+insert into transaction values ('hello', 2000, '6b4c7a24-0099-432e-a5e3-7e45a4049735','INCOME', CURRENT_DATE, 'Dad', 'for Iveel');

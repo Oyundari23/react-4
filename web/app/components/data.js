@@ -6,7 +6,7 @@ export const categoryIcons = [
       Icon: House,
     },
     {
-      name: 'fingerprint',
+      name: 'home',
       Icon: Fingerprint,
     },
     {
