@@ -30,3 +30,4 @@ CREATE TABLE TRANSACTION (
 )
 
 insert into transaction values ('hello', 2000, '6b4c7a24-0099-432e-a5e3-7e45a4049735','INCOME', CURRENT_DATE, 'Dad', 'for Iveel');
+select transaction.amount, transaction.type, category.name, category.icon from transaction left join category on transaction.categoryId = category.id 

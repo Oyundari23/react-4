@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
-import { Button } from '../button';
+import { Button } from './ui/button';
 
 
 export function Header() {
