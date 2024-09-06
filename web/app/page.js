@@ -47,7 +47,7 @@ export default function Home() {
   }
   function handleEdit(id) {
     fetch(`http://localhost:4000/categories/${id}`, {
-      method: "",
+      method: "EDIT",
     }).then((res) => {
       if (res.status === 404) {
         alert("Category not found");
