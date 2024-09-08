@@ -116,7 +116,6 @@ function CategoryIcon({ iconName, color }) {
   } else {
     hexColor = colorObject.Value;
   }
-
   const { Icon } = iconObject;
   return <Icon style={{ color: hexColor }} />;
 }
