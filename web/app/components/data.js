@@ -49,6 +49,27 @@ export const categoryIcons = [
       name: 'calendar',
       Icon: Calendar,
     },
+    {
+      name: 'calendar',
+      Icon: Calendar,
+    },
+    {
+      name: 'calendar',
+      Icon: Calendar,
+    },
+    {
+      name: 'calendar',
+      Icon: Calendar,
+    },
+    {
+      name: 'calendar',
+      Icon: Calendar,
+    },
+    {
+      name: 'calendar',
+      Icon: Calendar,
+    },
+    
   ]
   
   export const categoryColors = [
