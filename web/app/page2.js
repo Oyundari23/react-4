@@ -119,3 +119,5 @@ function CategoryIcon({ iconName, color }) {
   const { Icon } = iconObject;
   return <Icon style={{ color: hexColor }} />;
 }
+
+
